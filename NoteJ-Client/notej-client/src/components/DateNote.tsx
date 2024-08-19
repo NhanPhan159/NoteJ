@@ -40,13 +40,22 @@ const DateNote:FC<TNote> = (props) => {
     }
 
     // help remain the format of note content
+    // need to improve
     function covertContentToList(text: string){
-      const textArray = text.split("\n")
-      const textArrayAfterFormat:any[] = []
-      textArray.forEach(element => {
-        textArrayAfterFormat.push(<p>{element}</p>)
-      });
-      return textArrayAfterFormat
+      if(text !== ''){
+        const slideText = text.slice(0,200)
+        const textArray = slideText.split("\n")
+        const textArrayAfterFormat:any[] = []
+        textArray.forEach((element,index) => {
+          if(index === textArray.length - 1){
+            textArrayAfterFormat.push(<p>{element + ' ... (more)'}</p>)
+          } else
+          textArrayAfterFormat.push(<p>{element}</p>)
+
+        });
+        return textArrayAfterFormat
+      }
+      return []
     }
 
     // side effect
