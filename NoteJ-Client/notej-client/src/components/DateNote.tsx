@@ -16,7 +16,7 @@ import { HomeContext } from "@/pages/home";
 const DateNote:FC<TNote> = (props) => {
     const [dateAndDay,setDateAndDate] = useState("")
     const d = new Date()
-    const styleForOldday:CSSProperties = {border:"solid 1px red", borderRadius: "5px",padding:"5px 25px", flexBasis:"18%"}
+    const styleForOldday:CSSProperties = {border:"solid 1px red", borderRadius: "5px",padding:"5px 25px", flexBasis:"24%"}
     if(d.toISOString().includes(props.date)){
       styleForOldday.border = "solid 1px blue"
     }
@@ -47,7 +47,7 @@ const DateNote:FC<TNote> = (props) => {
         const textArray = slideText.split("\n")
         const textArrayAfterFormat:any[] = []
         textArray.forEach((element,index) => {
-          if(index === textArray.length - 1){
+          if(index === textArray.length - 1 && text.length > 200){
             textArrayAfterFormat.push(<p>{element + ' ... (more)'}</p>)
           } else
           textArrayAfterFormat.push(<p>{element}</p>)
@@ -65,7 +65,7 @@ const DateNote:FC<TNote> = (props) => {
     },[props])
     return ( 
       <DialogCustom note={props} saveFunc={hanldeClick}>
-        <div className="" style={styleForOldday}>
+        <div className="flex-" style={styleForOldday}>
               <h2 className="text-center text-xl font-bold mb-2">{dateAndDay}</h2>
               {covertContentToList(props.content).map(curr=>(curr))}
           </div>
