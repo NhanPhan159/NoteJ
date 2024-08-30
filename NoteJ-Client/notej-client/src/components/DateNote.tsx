@@ -65,7 +65,7 @@ const DateNote:FC<TNote> = (props) => {
     },[props])
     return ( 
       <DialogCustom note={props} saveFunc={hanldeClick}>
-        <div className="flex-" style={styleForOldday}>
+        <div className="cursor-pointer" style={styleForOldday}>
               <h2 className="text-center text-xl font-bold mb-2">{dateAndDay}</h2>
               {covertContentToList(props.content).map(curr=>(curr))}
           </div>
@@ -90,8 +90,8 @@ const DialogCustom:FC<TDialog> = (props) => {
     const newContentNote = {...note,content}
     setNote(newContentNote)
   }
-  function handleSave(){
-    props.saveFunc(note)
+  async function handleSave(){
+    await props.saveFunc(note)
     setOpen(false)
     setUpdateOrCreateNote()
   }

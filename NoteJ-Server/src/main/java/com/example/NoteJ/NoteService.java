@@ -1,5 +1,7 @@
 package com.example.NoteJ;
 
+import com.example.NoteJ.CustomException.EmptyContentException;
+import com.example.NoteJ.CustomException.IdNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,9 @@ public class NoteService {
 
     @Autowired
     private NoteRepository noteRepository;
-    public Note createNote(Note note){
+    public Note createNote(Note note) throws EmptyContentException {
+        if(note.getContent().isEmpty())
+            throw new EmptyContentException("Empty content");
         return noteRepository.save(note);
     }
     public List<Note> getAllNotes(){
@@ -24,19 +28,13 @@ public class NoteService {
     public void deleteNote(Long id){
         noteRepository.deleteById(id);
     }
-    public boolean updateNote(Long id, String newContent){
+    public void updateNote(Long id, String newContent) throws IdNotFoundException {
         Optional<Note> note = noteRepository.findById(id);
-        if(note.isPresent()){
-            note.get().setContent(newContent);
-            noteRepository.save(note.get());
-            return true;
-        }
-        return false;
-//        Optional<Note> note = noteRepository.findById(id);
-//        note.ifPresent(value -> {
-//            value.setContent(newContent);
-//            noteRepository.save(value);
-//        });
+        note.orElseThrow(()->new IdNotFoundException("Id Not Found"));
+        note.ifPresent(value -> {
+            value.setContent(newContent);
+            noteRepository.save(value);
+        });
     }
     public List<Note> getNoteForThisWeek(LocalDate today){
         LocalDate startOfWeek = today.with(DayOfWeek.MONDAY);

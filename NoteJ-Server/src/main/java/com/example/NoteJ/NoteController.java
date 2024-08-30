@@ -1,5 +1,7 @@
 package com.example.NoteJ;
 
+import com.example.NoteJ.CustomException.EmptyContentException;
+import com.example.NoteJ.CustomException.IdNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.http.HttpStatus;
@@ -25,7 +27,7 @@ public class NoteController {
         return ResponseEntity.ok(noteService.getAllNotes());
     }
     @PostMapping
-    private ResponseEntity<Void> creteNote(@RequestBody Note newCashCardRequest, UriComponentsBuilder ucb) {
+    private ResponseEntity<Void> creteNote(@RequestBody Note newCashCardRequest, UriComponentsBuilder ucb) throws EmptyContentException {
         Note savedCashCard = noteService.createNote(newCashCardRequest);
         URI locationOfNewCashCard = ucb
                 .path("note/{id}")
@@ -39,11 +41,9 @@ public class NoteController {
         return new ResponseEntity<String>(String.format("The note with id - %d is deleted", id), HttpStatus.NO_CONTENT);
     }
     @PutMapping("/{id}")
-    private ResponseEntity<?> updateNote(@PathVariable("id") Long id, @RequestBody Note newContent){
-        if(noteService.updateNote(id,newContent.getContent())){
-            return ResponseEntity.ok("the note is updated");
-        }
-        return ResponseEntity.badRequest().body("Id is not found");
+    private ResponseEntity<?> updateNote(@PathVariable("id") Long id, @RequestBody Note newContent) throws IdNotFoundException {
+        noteService.updateNote(id,newContent.getContent());
+        return ResponseEntity.ok("The note is updated");
     }
     @GetMapping("/range")
     private ResponseEntity<List<Note>> getNoteForThisWeek(@RequestParam LocalDate today){
